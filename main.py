@@ -18,5 +18,5 @@ range_df= df[(df["Date"]>=pd.to_datetime(start_date)),
 range_df= range_df.reset_index(drop=True)
 st.table(range_df)
 
-if __name__ == '__main__':
-    main()
+st.subheader('거래량 변동 차트')
+st.line_chart(range_df.set_index('Date')['Volume'])
