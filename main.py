@@ -1,22 +1,17 @@
 import streamlit as st
-import pandas as pd
 from data_loader import load_data
+import pandas as pd
 
-def main():
-    st.title("It's me'")
-    
-df=load_data()
-  
-
-st.subheader('Select Date Range')
 df['Date']=pd.to_datetime(df['Date'])
-start_date =st.date_input('Start date',df['Date'].min())
-end_date=st.date_input("End date",df["Date"].max())
-
-range_df= df[(df["Date"]>=pd.to_datetime(start_date)),
-             (df['Date']<=pd.to_datetime(end_date))]
-range_df= range_df.reset_index(drop=True)
+with st.expander("범위를 선택하세요"):
+    col1,col2 = st.columns(2)
+    with col1:
+        start_date= st.date_input("시작일",df["Date"].min())
+    with col2:
+        end_date =st.date_input("종료일",df['Date'].max())
+range_df = df[(df['Date']>= pd.to_datetime(start_date))&(df['Date']<= pd.to_datetime(end_date))]
+range_df=range_df.reset_index(drop=True)
 st.table(range_df)
 
-if __name__ == '__main__':
-    main()
+st.subheader('주가 변동 차트')
+st.line_chart(range_df.set_index('Date')['Close'])
